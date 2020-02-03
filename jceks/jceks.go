@@ -89,10 +89,10 @@ func (e *privateKeyEntry) Recover(password []byte) (crypto.PrivateKey, error) {
 	case eKey.Algo.Algorithm.Equal(oidPBEWithMD5AndDES3CBC):
 		decryptedKey, err = recoverPBEWithMD5AndDES3CBC(eKey.Algo, eKey.EncryptedKey, password)
 	case eKey.Algo.Algorithm.Equal(oidKeyProtector):
+		decryptedKey, err = recoverKeyProtector(eKey.EncryptedKey, password)
 		// JavaSoft proprietary key-protection algorithm (used to protect
 		// private keys in the keystore implementation that comes with JDK
 		// 1.2). We shouldn't need this.
-		fallthrough
 	default:
 		return nil, fmt.Errorf("unsupported encrypted-private-key algorithm: %v", eKey.Algo.Algorithm)
 	}
